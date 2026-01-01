@@ -37,13 +37,25 @@ export class AppController {
                 this.net.fetchData("https://raw.githubusercontent.com/sunflower-land/sunflower-land/refs/heads/main/src/features/game/types/fruits.ts")
             ]);
 
+            console.log("[Debug] P2P Raw Data:", p2p);
+
             const cropsParsed = this.parser.parseTS(cropsTS.content);
             const fruitsParsed = this.parser.parseTS(fruitsTS.content);
             this.cachedShop = { ...cropsParsed, ...fruitsParsed };
             this.cachedP2P = p2p;
+            let timestamp = null;
 
             if (p2p && p2p.updatedAt) {
-                this.lastUpdateTime = new Date(p2p.updatedAt);
+                timestamp = p2p.updatedAt;
+            } 
+            else if (p2p && p2p.data && p2p.data.updatedAt) {
+                timestamp = p2p.data.updatedAt;
+            }
+
+            if (timestamp) {
+                const ts = Number(timestamp);
+                this.lastUpdateTime = new Date(ts);
+                console.log("[Debug] Time Parsed:", this.lastUpdateTime);
             } else {
                 this.lastUpdateTime = new Date();
             }
@@ -224,9 +236,7 @@ export class AppController {
             `;
             
             let rawName = item.name.toLowerCase().replace(/\s+/g, '-');
-            
             const iconName = rawName.charAt(0).toUpperCase() + rawName.slice(1);
-
             const iconUrl = `https://sfl.world/img/source/${iconName}.png`;
 
             tr.innerHTML = `
