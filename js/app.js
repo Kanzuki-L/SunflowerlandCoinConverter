@@ -43,28 +43,26 @@ export class AppController {
             const fruitsParsed = this.parser.parseTS(fruitsTS.content);
             this.cachedShop = { ...cropsParsed, ...fruitsParsed };
             this.cachedP2P = p2p;
-            let timestamp = null;
 
+            let timestamp = null;
             if (p2p && p2p.updatedAt) {
                 timestamp = p2p.updatedAt;
-            } 
-            else if (p2p && p2p.data && p2p.data.updatedAt) {
+            } else if (p2p && p2p.data && p2p.data.updatedAt) {
                 timestamp = p2p.data.updatedAt;
             }
 
             if (timestamp) {
                 const ts = Number(timestamp);
                 this.lastUpdateTime = new Date(ts);
-                console.log("[Debug] Time Parsed:", this.lastUpdateTime);
             } else {
                 this.lastUpdateTime = new Date();
             }
 
+            this._loadBonusSettings();
             this.triggerCalculation();
 
             const msg = `${this.i18n.t('Update Success')}: ${this.rawData.length} ${this.i18n.t('items')}`;
-            this._setStatus(msg);
-            
+            this._setStatus(msg);            
             this._updateUILabels(); 
 
         } catch (e) {
@@ -75,11 +73,31 @@ export class AppController {
         }
     }
 
-    switchLanguage() {
-        const newLang = this.i18n.toggleLanguage();
-        const btn = document.getElementById('btn-lang');
-        if(btn) btn.innerText = newLang === 'zh' ? 'EN' : '中';
+    _loadBonusSettings() {
+        const b5 = localStorage.getItem('sfl_bonus5') === 'true';
+        const b10 = localStorage.getItem('sfl_bonus10') === 'true';
 
+        const el5 = document.getElementById('bonus5');
+        const el10 = document.getElementById('bonus10');
+
+        if(el5) el5.checked = b5;
+        if(el10) el10.checked = b10;
+    }
+
+    toggleBonus() {
+        const bonus5 = document.getElementById('bonus5')?.checked || false;
+        const bonus10 = document.getElementById('bonus10')?.checked || false;
+        
+        localStorage.setItem('sfl_bonus5', bonus5);
+        localStorage.setItem('sfl_bonus10', bonus10);
+
+        if (this.cachedP2P && this.cachedShop) {
+            this.triggerCalculation();
+        }
+    }
+
+    switchLanguage() {
+        this.i18n.toggleLanguage();
         this._updateUILabels();
         this.filterData();
 
@@ -93,6 +111,10 @@ export class AppController {
 
     _updateUILabels() {
         const t = (k) => this.i18n.t(k);
+        const currentLang = this.i18n.getLang();
+
+        const btn = document.getElementById('btn-lang');
+        if(btn) btn.innerText = currentLang === 'zh' ? 'EN' : '中';
 
         if(document.getElementById('th-item')) document.getElementById('th-item').innerHTML = `${t('Item')} <i class="fa-solid fa-sort"></i>`;
         if(document.getElementById('th-p2p')) document.getElementById('th-p2p').innerHTML = `${t('P2P Price')} <i class="fa-solid fa-sort"></i>`;
@@ -121,12 +143,6 @@ export class AppController {
         const timeStr = this.lastUpdateTime.toLocaleString(lang);
         
         el.innerHTML = `${this.i18n.t('Last Updated')}: ${timeStr}`;
-    }
-
-    toggleBonus() {
-        if (this.cachedP2P && this.cachedShop) {
-            this.triggerCalculation();
-        }
     }
 
     triggerCalculation() {
