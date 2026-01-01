@@ -1,13 +1,37 @@
 class NetworkService {
-    constructor() { this._proxyUrl = "./proxy.php"; }
-    async _FetchData(url) {
+    constructor() {}
+
+    async _FetchData(targetUrl) {
         try {
-            const res = await fetch(`${this._proxyUrl}?url=${encodeURIComponent(url)}&t=${Date.now()}`);
-            const json = await res.json();
-            if (json.error) throw new Error(json.error);
-            return json; 
+            let fetchUrl = targetUrl;
+            
+            if (targetUrl.includes('sfl.world')) {
+                fetchUrl = 'https://corsproxy.io/?' + encodeURIComponent(targetUrl);
+            }
+            else {
+                fetchUrl = targetUrl + '?t=' + Date.now();
+            }
+
+            console.log(`[Network] Fetching: ${fetchUrl}`);
+            const res = await fetch(fetchUrl);
+            
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+            if (targetUrl.includes('.ts')) {
+                const text = await res.text();
+                return { content: text }; 
+            } 
+            else {
+                return await res.json();
+            }
+
         } catch (e) {
-            console.error(`Fetch Error (${url}):`, e);
+            console.error(`Fetch Error (${targetUrl}):`, e);
+            
+            if (!targetUrl.includes('corsproxy.io') && targetUrl.includes('github')) {
+                console.warn("直连失败，尝试代理重试...");
+                return this._FetchData('https://corsproxy.io/?' + encodeURIComponent(targetUrl));
+            }
             throw e;
         }
     }
@@ -59,7 +83,12 @@ class ParserService {
 
             let xp = 0;
             const xpMatch = block.match(/\bxp\s*:\s*([\d\.]+)/);
-            if (xpMatch) xp = parseFloat(xpMatch[1]);
+            if (xpMatch) {
+                xp = parseFloat(xpMatch[1]);
+            } else {
+                const expMatch = block.match(/experience\s*:\s*([\d\.]+)/);
+                if (expMatch) xp = parseFloat(expMatch[1]);
+            }
 
             if (sellPrice > 0 || xp > 0) {
                 items[name] = { sellPrice, xp };
@@ -101,7 +130,6 @@ class CoreLogic {
                 else if (this.categories.Greenhouse.includes(name)) cat = 'Greenhouse';
 
                 let finalSellPrice = shopInfo.sellPrice;
-
                 if (cat === 'Crops') {
                     if (isBonus5) finalSellPrice = finalSellPrice * 1.05;
                     if (isBonus10) finalSellPrice = finalSellPrice * 1.10;
@@ -126,7 +154,6 @@ class CoreLogic {
                     isCustom: false,
                     xp: shopInfo.xp,
                     sellPrice: finalSellPrice,
-                    baseSellPrice: shopInfo.sellPrice, 
                     efficiency: efficiency,
                     ratio: ratio
                 });
@@ -152,11 +179,9 @@ class AppController {
         this.net = new NetworkService();
         this.parser = new ParserService();
         this.logic = new CoreLogic();
-        
         this.rawData = [];
-        this.cachedP2P = null; 
-        this.cachedShop = null; 
-        
+        this.cachedP2P = null;
+        this.cachedShop = null;
         this.currentCategory = 'All';
         this.sortField = 'ratio'; 
         this.sortDesc = true;     
@@ -172,21 +197,16 @@ class AppController {
                 this.net._FetchData("https://raw.githubusercontent.com/sunflower-land/sunflower-land/refs/heads/main/src/features/game/types/fruits.ts")
             ]);
 
-            const cropsContent = cropsTS.content || cropsTS;
-            const fruitsContent = fruitsTS.content || fruitsTS;
-
-            const cropsParsed = this.parser.ParseTS(cropsContent);
-            const fruitsParsed = this.parser.ParseTS(fruitsContent);
-            
+            const cropsParsed = this.parser.ParseTS(cropsTS.content);
+            const fruitsParsed = this.parser.ParseTS(fruitsTS.content);
             this.cachedShop = { ...cropsParsed, ...fruitsParsed };
             this.cachedP2P = p2p;
 
             this.TriggerCalculation();
-            
             this._SetStatus(`更新成功: ${this.rawData.length} 条数据`);
         } catch (e) {
             console.error(e);
-            this._SetStatus("更新失败", true);
+            this._SetStatus("更新失败 (请检查网络)", true);
         } finally {
             this._SetLoading(false);
         }
@@ -201,9 +221,7 @@ class AppController {
     TriggerCalculation() {
         const bonus5 = document.getElementById('bonus5').checked;
         const bonus10 = document.getElementById('bonus10').checked;
-
         this.rawData = this.logic.Calculate(this.cachedP2P, this.cachedShop, bonus5, bonus10);
-        
         this.FilterData();
     }
 
@@ -275,30 +293,21 @@ class AppController {
 
             let ratioColor = '#666';
             let ratioWeight = 'normal';
-            if (item.ratio >= 320) { 
-                ratioColor = '#40c057'; ratioWeight = 'bold'; 
-            } else if (item.ratio > 0) { 
-                ratioColor = '#fa5252'; ratioWeight = 'bold'; 
-            } 
+            if (item.ratio >= 320) { ratioColor = '#40c057'; ratioWeight = 'bold'; } 
+            else if (item.ratio > 0) { ratioColor = '#fa5252'; ratioWeight = 'bold'; } 
             
             const inputStyle = `
                 background: transparent;
                 border: 1px solid ${item.isCustom ? '#fab005' : 'transparent'};
                 color: ${item.isCustom ? '#fab005' : 'inherit'};
-                width: 100px;
-                padding: 4px;
-                border-radius: 4px;
-                font-family: monospace;
+                width: 100px; padding: 4px; border-radius: 4px; font-family: monospace;
             `;
             
             tr.innerHTML = `
                 <td style="font-weight:bold; color:var(--primary)">${item.name}</td>
                 <td>
-                    <input type="number" step="0.0001" 
-                           style="${inputStyle}"
-                           class="p2p-input"
-                           value="${item.p2p > 0 ? item.p2p : ''}" 
-                           placeholder="0.00"
+                    <input type="number" step="0.0001" style="${inputStyle}" class="p2p-input"
+                           value="${item.p2p > 0 ? item.p2p : ''}" placeholder="0.00"
                            onchange="app.UpdatePrice('${item.name}', this.value)">
                 </td>
                 <td style="color:#888">${item.sellPrice > 0 ? fmt(item.sellPrice) : '-'}</td>
