@@ -147,4 +147,34 @@ td { color: var(--text-main); font-size: 0.95em; }
 }
 .p2p-input:focus { border-color: var(--primary); background: var(--bg-dark); outline: none; }
 
-#status-bar { text-align: right; color: #666; font-size: 0.85em; margin-top: 10px; }
+.footer-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    font-size: 0.85em;
+    color: #666;
+    padding: 0 5px;
+}
+
+@media (max-width: 768px) {
+    .footer-info {
+        flex-direction: column-reverse;
+        gap: 5px;
+        align-items: flex-end;
+    }
+}
+
+.item-icon {
+    width: 24px;         
+    height: 24px;        
+    vertical-align: middle; 
+    margin-right: 8px;   
+    object-fit: contain; 
+    filter: drop-shadow(0 2px 2px rgba(0,0,0,0.3));
+}
+
+.item-cell {
+    display: flex;
+    align-items: center;
+}
