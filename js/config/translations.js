@@ -1,5 +1,5 @@
 export const zhCN = {
-    // --- Crops (庄稼) ---
+    // --- 物品名称 ---
     "Sunflower": "向日葵",
     "Potato": "土豆",
     "Pumpkin": "南瓜",
@@ -24,7 +24,6 @@ export const zhCN = {
     "Turnip": "芜菁",
     "Artichoke": "洋蓟",
 
-    // --- Fruits (水果) ---
     "Apple": "苹果",
     "Blueberry": "蓝莓",
     "Orange": "香橙",
@@ -34,20 +33,18 @@ export const zhCN = {
     "Celestine": "天仙桃",
     "Lunara": "月宫桂",
     "Duskberry": "暗昏莓",
-    
-    // --- Greenhouse (温室) ---
+
     "Grape": "葡萄",
     "Rice": "稻米",
     "Olive": "橄榄",
 
-    // --- UI Labels (界面文字) ---
+    // --- 界面文字 ---
     "Item": "物品",
     "P2P Price": "P2P 市价",
     "Betty Price": "商店/回收价",
     "Coins per 1 FLOWER": "1 FLOWER 兑换金币",
-    "Search...": "搜索物品名称...",
+    "Search": "搜索物品名称...",
     "Sync": "同步数据",
-    "Language": "Language/语言",
     "All": "全部",
     "Crops": "庄稼",
     "Fruits": "水果",
@@ -56,5 +53,26 @@ export const zhCN = {
     "Update Failed": "更新失败 (请检查网络)",
     "items": "条数据",
     "Ready": "就绪",
-    "Last Updated": "最后更新时间",
+    "Last Updated": "最后更新时间"
 };
+
+export const enUS = {
+    "Item": "Item",
+    "P2P Price": "P2P Price",
+    "Betty Price": "Betty Price", 
+    "Coins per 1 FLOWER": "Coins per 1 FLOWER",
+    "Search": "Search items...",
+    "Sync": "Sync Data",
+    "All": "All",
+    "Crops": "Crops",
+    "Fruits": "Fruits",
+    "Greenhouse": "Greenhouse",
+    "Update Success": "Update Success",
+    "Update Failed": "Update Failed",
+    "items": "items",
+    "Ready": "Ready",
+    "Last Updated": "Last Updated"
+};
+
+
+// if want to add new language, i.e: export const jaJP = { copy from above... }

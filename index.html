@@ -15,10 +15,16 @@
         <div class="brand">
             <i class="fa-solid fa-sun fa-spin" style="color:orange"></i> SFL Coin Price Converter
         </div>
-        <div>
-            <button class="action-btn" id="btn-lang" onclick="app.switchLanguage()" style="padding: 5px 15px; font-size: 0.8em;">
-                EN
-            </button>
+        
+        <div class="lang-selector">
+            <i class="fa-solid fa-earth-americas" style="color:#888; margin-right:5px;"></i>
+            
+            <select id="langSelect" onchange="app.changeLanguage(this.value)" 
+                    style="padding: 5px 10px; border-radius: 4px; background: #333; color: white; border: 1px solid #555;">
+                <option value="zh">中文 (简体)</option>
+                <option value="en">English</option>
+                <!-- if new language, add here, i.e: <option value="jp">日文</option> -->
+                </select>
         </div>
     </nav>
 

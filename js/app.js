@@ -24,8 +24,8 @@ export class AppController {
         this.setCategory = this.setCategory.bind(this);
         this.sortTable = this.sortTable.bind(this);
         this.filterData = this.filterData.bind(this);
-        this.fetchData = this.fetchData.bind(this);
-        this.switchLanguage = this.switchLanguage.bind(this);
+        this.fetchData = this.fetchData.bind(this);        
+        this.changeLanguage = this.changeLanguage.bind(this);
     }
 
     async fetchData() {
@@ -37,7 +37,7 @@ export class AppController {
                 this.net.fetchData("https://raw.githubusercontent.com/sunflower-land/sunflower-land/refs/heads/main/src/features/game/types/fruits.ts")
             ]);
 
-            console.log("[Debug] P2P Raw Data:", p2p);
+            // console.log("[Debug] P2P Raw Data:", p2p);
 
             const cropsParsed = this.parser.parseTS(cropsTS.content);
             const fruitsParsed = this.parser.parseTS(fruitsTS.content);
@@ -62,7 +62,8 @@ export class AppController {
             this.triggerCalculation();
 
             const msg = `${this.i18n.t('Update Success')}: ${this.rawData.length} ${this.i18n.t('items')}`;
-            this._setStatus(msg);            
+            this._setStatus(msg);
+            
             this._updateUILabels(); 
 
         } catch (e) {
@@ -76,28 +77,14 @@ export class AppController {
     _loadBonusSettings() {
         const b5 = localStorage.getItem('sfl_bonus5') === 'true';
         const b10 = localStorage.getItem('sfl_bonus10') === 'true';
-
         const el5 = document.getElementById('bonus5');
         const el10 = document.getElementById('bonus10');
-
         if(el5) el5.checked = b5;
         if(el10) el10.checked = b10;
     }
 
-    toggleBonus() {
-        const bonus5 = document.getElementById('bonus5')?.checked || false;
-        const bonus10 = document.getElementById('bonus10')?.checked || false;
-        
-        localStorage.setItem('sfl_bonus5', bonus5);
-        localStorage.setItem('sfl_bonus10', bonus10);
-
-        if (this.cachedP2P && this.cachedShop) {
-            this.triggerCalculation();
-        }
-    }
-
-    switchLanguage() {
-        this.i18n.toggleLanguage();
+    changeLanguage(langCode) {
+        this.i18n.setLanguage(langCode);
         this._updateUILabels();
         this.filterData();
 
@@ -111,10 +98,11 @@ export class AppController {
 
     _updateUILabels() {
         const t = (k) => this.i18n.t(k);
-        const currentLang = this.i18n.getLang();
-
-        const btn = document.getElementById('btn-lang');
-        if(btn) btn.innerText = currentLang === 'zh' ? 'EN' : '中';
+        
+        const langSelect = document.getElementById('langSelect');
+        if (langSelect) {
+            langSelect.value = this.i18n.getLang();
+        }
 
         if(document.getElementById('th-item')) document.getElementById('th-item').innerHTML = `${t('Item')} <i class="fa-solid fa-sort"></i>`;
         if(document.getElementById('th-p2p')) document.getElementById('th-p2p').innerHTML = `${t('P2P Price')} <i class="fa-solid fa-sort"></i>`;
@@ -138,11 +126,19 @@ export class AppController {
     _updateFooterTime() {
         const el = document.getElementById('last-updated');
         if (!el || !this.lastUpdateTime) return;
-
         const lang = this.i18n.getLang() === 'zh' ? 'zh-CN' : 'en-US';
         const timeStr = this.lastUpdateTime.toLocaleString(lang);
-        
         el.innerHTML = `${this.i18n.t('Last Updated')}: ${timeStr}`;
+    }
+
+    toggleBonus() {
+        const bonus5 = document.getElementById('bonus5')?.checked || false;
+        const bonus10 = document.getElementById('bonus10')?.checked || false;
+        localStorage.setItem('sfl_bonus5', bonus5);
+        localStorage.setItem('sfl_bonus10', bonus10);
+        if (this.cachedP2P && this.cachedShop) {
+            this.triggerCalculation();
+        }
     }
 
     triggerCalculation() {
@@ -200,7 +196,6 @@ export class AppController {
     filterData() {
         const searchInput = document.getElementById('searchInput');
         if (!searchInput) return; 
-
         const search = searchInput.value.toLowerCase();
         
         let filtered = this.rawData.filter(item => {
@@ -215,7 +210,6 @@ export class AppController {
                 const nameB = this.i18n.t(b.name);
                 return this.sortDesc ? nameB.localeCompare(nameA, 'zh') : nameA.localeCompare(nameB, 'zh');
             }
-
             let valA = a[this.sortField];
             let valB = b[this.sortField];
             return this.sortDesc ? valB - valA : valA - valB;
@@ -228,17 +222,14 @@ export class AppController {
         const tbody = document.getElementById('tableBody');
         if (!tbody) return;
         tbody.innerHTML = '';
-
         if (data.length === 0) {
             tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:30px;">无数据</td></tr>`;
             return;
         }
-
         data.forEach(item => {
             const tr = document.createElement('tr');
             const fmt = (n) => n < 0.01 ? n.toFixed(5) : n.toFixed(4);
             const fmtInt = (n) => Math.round(n).toLocaleString();
-
             let ratioColor = '#666';
             let ratioWeight = 'normal';
             if (item.ratio >= 320) { ratioColor = '#40c057'; ratioWeight = 'bold'; } 
@@ -278,7 +269,6 @@ export class AppController {
         const btn = document.getElementById('btn-fetch');
         if(btn) btn.disabled = isLoading; 
     }
-    
     _setStatus(msg, isError) {
         const el = document.getElementById('status-bar');
         if(el) {

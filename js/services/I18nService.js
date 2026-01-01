@@ -1,24 +1,30 @@
-import { zhCN } from '../config/translations.js';
+import { zhCN, enUS } from '../config/translations.js';
 
 export class I18nService {
     constructor() {
-        this.currentLang = localStorage.getItem('sfl_lang') || 'zh';
-        this.dictionary = zhCN;
+        this.dictionaries = {
+            'zh': zhCN,
+            'en': enUS
+            // add new language here, i.e: 'jp': jaJP,
+        };
+
+        this.currentLang = localStorage.getItem('sfl_lang') || 'en'; // set default as en
     }
 
-    toggleLanguage() {
-        this.currentLang = this.currentLang === 'zh' ? 'en' : 'zh';
-        
-        localStorage.setItem('sfl_lang', this.currentLang);
-        
-        return this.currentLang;
+    setLanguage(langCode) {
+        if (this.dictionaries[langCode]) {
+            this.currentLang = langCode;
+            localStorage.setItem('sfl_lang', langCode);
+        }
     }
 
     t(key) {
-        if (this.currentLang === 'en') {
-            return key;
+        const dict = this.dictionaries[this.currentLang];
+        
+        if (dict && dict[key]) {
+            return dict[key];
         }
-        return this.dictionary[key] || key;
+        return key;
     }
     
     getLang() {
