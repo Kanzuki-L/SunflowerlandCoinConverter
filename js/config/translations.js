@@ -76,5 +76,65 @@ export const enUS = {
     "Coins": "Coins",
 };
 
+export const msMY = {
+    // --- Tanaman (Crops) ---
+    "Sunflower": "Bunga Matahari",
+    "Potato": "Kentang",
+    "Pumpkin": "Labu",
+    "Carrot": "Lobak Merah",
+    "Cabbage": "Kobis",
+    "Beetroot": "Ubi Bit",
+    "Cauliflower": "Bunga Kobis",
+    "Parsnip": "Parsnip",
+    "Eggplant": "Terung",
+    "Corn": "Jagung",
+    "Radish": "Lobak Putih",
+    "Wheat": "Gandum",
+    "Kale": "Kale",
+    "Soybean": "Kacang Soya",
+    "Barley": "Barli",
+    "Rhubarb": "Rhubarb",
+    "Zucchini": "Zucchini",
+    "Yam": "Keladi",
+    "Broccoli": "Brokoli",
+    "Pepper": "Lada",
+    "Onion": "Bawang",
+    "Turnip": "Turnip",
+    "Artichoke": "Artichoke",
+
+    // --- Buah-buahan (Fruits) ---
+    "Apple": "Epal",
+    "Blueberry": "Beri Biru",
+    "Orange": "Oren",
+    "Banana": "Pisang",
+    "Tomato": "Tomato",
+    "Lemon": "Lemon",
+    "Celestine": "Celestine",
+    "Lunara": "Lunara",
+    "Duskberry": "Duskberry",
+
+    // --- Rumah Hijau (Greenhouse) ---
+    "Grape": "Anggur",
+    "Rice": "Padi",
+    "Olive": "Zaitun",
+
+    // --- UI Labels ---
+    "Item": "Barang",
+    "P2P Price": "Harga P2P",
+    "Betty Price": "Harga Kedai/Jual",
+    "Coins per 1 FLOWER": "Syiling per 1 FLOWER",
+    "Search": "Cari nama barang...",
+    "Sync": "Segerak Data",
+    "All": "Semua",
+    "Crops": "Tanaman",
+    "Fruits": "Buah",
+    "Greenhouse": "Rumah Hijau",
+    "Update Success": "Berjaya Dikemaskini",
+    "Update Failed": "Gagal Kemaskini (Semak Internet)",
+    "items": "item",
+    "Ready": "Sedia",
+    "Last Updated": "Terakhir Dikemaskini",
+    "Coins": "Syiling"
+};
 
 // if want to add new language, i.e: export const jaJP = { copy from above... }

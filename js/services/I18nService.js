@@ -1,10 +1,11 @@
-import { zhCN, enUS } from '../config/translations.js';
+import { zhCN, enUS, msMY } from '../config/translations.js'; // add new language here, i.e: jaJP
 
 export class I18nService {
     constructor() {
         this.dictionaries = {
             'zh': zhCN,
-            'en': enUS
+            'en': enUS,
+            'ms': msMY
             // add new language here, i.e: 'jp': jaJP,
         };
 
