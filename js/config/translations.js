@@ -53,13 +53,14 @@ export const zhCN = {
     "Update Failed": "更新失败 (请检查网络)",
     "items": "条数据",
     "Ready": "就绪",
-    "Last Updated": "最后更新时间"
+    "Last Updated": "最后更新时间",
+    "Coins": "金币",
 };
 
 export const enUS = {
     "Item": "Item",
     "P2P Price": "P2P Price",
-    "Betty Price": "Betty Price", 
+    "Betty Price": "Betty Price",
     "Coins per 1 FLOWER": "Coins per 1 FLOWER",
     "Search": "Search items...",
     "Sync": "Sync Data",
@@ -71,7 +72,8 @@ export const enUS = {
     "Update Failed": "Update Failed",
     "items": "items",
     "Ready": "Ready",
-    "Last Updated": "Last Updated"
+    "Last Updated": "Last Updated",
+    "Coins": "Coins",
 };
 
 

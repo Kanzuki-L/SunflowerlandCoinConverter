@@ -2,6 +2,6 @@ import { AppController } from './app.js';
 
 const app = new AppController();
 
-window.app = app; 
+window.app = app;
 
 app.fetchData();

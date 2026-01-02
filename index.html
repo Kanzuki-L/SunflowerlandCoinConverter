@@ -1,56 +1,67 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-B9409XF5PV"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-B9409XF5PV');
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SFL Coin Converter</title>
+    <title>SFLCC</title>
 
     <link rel="icon" type="image/png" href="images/logo/favicon.png">
     <link rel="stylesheet" href="css/custom.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
+
 <body>
 
     <nav class="navbar">
         <div class="brand">
-            <i class="fa-solid fa-sun fa-spin" style="color:orange"></i> SFL Coin Price Converter
+            <i class="fa-solid fa-sun fa-spin" style="color:orange"></i> SFL Coin Converter
         </div>
-        
+
         <div class="lang-selector">
             <i class="fa-solid fa-earth-americas" style="color:#888; margin-right:5px;"></i>
-            
-            <select id="langSelect" onchange="app.changeLanguage(this.value)" 
-                    style="padding: 5px 10px; border-radius: 4px; background: #333; color: white; border: 1px solid #555;">
-                <option value="zh">中文 (简体)</option>
+
+            <select id="langSelect"
+                style="padding: 5px 10px; border-radius: 4px; background: #333; color: white; border: 1px solid #555;">
                 <option value="en">English</option>
-                <!-- if new language, add here, i.e: <option value="jp">日文</option> -->
-                </select>
+                <option value="zh">中文 (简体)</option>
+            </select>
         </div>
     </nav>
 
     <div class="container">
         <div class="controls-area">
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="搜索物品名称..." onkeyup="app.filterData()">
+                <input type="text" id="searchInput" placeholder="搜索物品名称...">
             </div>
 
             <div class="filter-tabs">
-                <button id="tab-all" class="tab-btn active" onclick="app.setCategory('All')">全部</button>
-                <button id="tab-crops" class="tab-btn" onclick="app.setCategory('Crops')">庄稼</button>
-                <button id="tab-fruits" class="tab-btn" onclick="app.setCategory('Fruits')">水果</button>
-                <button id="tab-greenhouse" class="tab-btn" onclick="app.setCategory('Greenhouse')">温室</button>
+                <button id="tab-all" class="tab-btn active">全部</button>
+                <button id="tab-crops" class="tab-btn">庄稼</button>
+                <button id="tab-fruits" class="tab-btn">水果</button>
+                <button id="tab-greenhouse" class="tab-btn">温室</button>
             </div>
 
             <div class="bonus-group">
                 <label class="bonus-label">
-                    <input type="checkbox" id="bonus5" onchange="app.toggleBonus()"> +5% Green Thumb
+                    <input type="checkbox" id="bonus5"> +5% Green Thumb
                 </label>
                 <label class="bonus-label">
-                    <input type="checkbox" id="bonus10" onchange="app.toggleBonus()"> +10% Coin Swindler
+                    <input type="checkbox" id="bonus10"> +10% Coin Swindler
                 </label>
             </div>
 
-            <button class="action-btn" id="btn-fetch" onclick="app.fetchData()">
+            <button class="action-btn" id="btn-fetch">
                 <i class="fa-solid fa-arrows-rotate"></i> 同步数据
             </button>
         </div>
@@ -59,18 +70,20 @@
             <table id="dataTable">
                 <thead>
                     <tr>
-                        <th id="th-item" onclick="app.sortTable('name')">物品 <i class="fa-solid fa-sort"></i></th>
-                        <th id="th-p2p" onclick="app.sortTable('p2p')">P2P 市价 <i class="fa-solid fa-sort"></i></th>
-                        <th id="th-shop" onclick="app.sortTable('sellPrice')">商店/回收价 <i class="fa-solid fa-sort"></i></th>
-                        <th id="th-ratio" onclick="app.sortTable('ratio')">1 FLOWER 兑换金币 <i class="fa-solid fa-sort"></i></th>
+                        <th id="th-item">物品 <i class="fa-solid fa-sort"></i></th>
+                        <th id="th-p2p">P2P 市价 <i class="fa-solid fa-sort"></i></th>
+                        <th id="th-shop">商店/回收价 <i class="fa-solid fa-sort"></i></th>
+                        <th id="th-ratio">1 FLOWER 兑换金币 <i class="fa-solid fa-sort"></i></th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
-                    <tr><td colspan="5" class="loading-overlay">请点击“同步数据”</td></tr>
+                    <tr>
+                        <td colspan="5" class="loading-overlay">请点击“同步数据”</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
-        
+
         <div class="footer-info">
             <div id="last-updated"></div>
             <div id="status-bar">Ready</div>
@@ -79,4 +92,5 @@
 
     <script type="module" src="js/main.js"></script>
 </body>
+
 </html>

@@ -1,5 +1,5 @@
 export class NetworkService {
-    constructor() {}
+    constructor() { }
 
     async fetchData(url) {
         try {

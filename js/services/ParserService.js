@@ -42,17 +42,17 @@ export class ParserService {
                 if (marketMatch) sellPrice = parseFloat(marketMatch[1]);
             }
 
-            let xp = 0;
-            const xpMatch = block.match(/\bxp\s*:\s*([\d\.]+)/);
-            if (xpMatch) {
-                xp = parseFloat(xpMatch[1]);
+            let coin = 0;
+            const coinMatch = block.match(/\bcoin\s*:\s*([\d\.]+)/);
+            if (coinMatch) {
+                coin = parseFloat(coinMatch[1]);
             } else {
-                const expMatch = block.match(/experience\s*:\s*([\d\.]+)/);
-                if (expMatch) xp = parseFloat(expMatch[1]);
+                const coinsMatch = block.match(/coin\s*:\s*([\d\.]+)/);
+                if (coinsMatch) coin = parseFloat(coinsMatch[1]);
             }
 
-            if (sellPrice > 0 || xp > 0) {
-                items[name] = { sellPrice, xp };
+            if (sellPrice > 0 || coin > 0) {
+                items[name] = { sellPrice, coin };
             }
         });
 

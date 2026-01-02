@@ -20,13 +20,13 @@ export class I18nService {
 
     t(key) {
         const dict = this.dictionaries[this.currentLang];
-        
+
         if (dict && dict[key]) {
             return dict[key];
         }
         return key;
     }
-    
+
     getLang() {
         return this.currentLang;
     }
