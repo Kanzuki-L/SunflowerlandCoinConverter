@@ -124,7 +124,7 @@ export class UiView {
         const el = this.elements.footerTime;
         if (!el || !lastUpdateTime) return;
 
-        const localeMap = { 'zh': 'zh-CN', 'en': 'en-US', 'jp': 'ja-JP', 'pt': 'pt-BR' };
+        const localeMap = { 'zh': 'zh-CN', 'en': 'en-US', 'ms': 'ms-MY', 'jp': 'ja-JP', 'pt': 'pt-BR' };
         const locale = localeMap[langCode] || 'en-US';
         const timeStr = lastUpdateTime.toLocaleString(locale);
 
